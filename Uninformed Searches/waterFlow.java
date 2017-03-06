@@ -1,10 +1,12 @@
-/*Version 14 */
 import java.io.*;
 import java.util.*;
 public class waterFlow{
 	static boolean enableDebug=false;
-	// The getInput method takes the input from text file specified in the CLA and stores it in ArrayList datastructure
+	
+	// The getInput method takes the input from text file specified in the CLA and stores it in ArrayList data structure
+	
 	public static ArrayList<String> getInput(String[] args) throws IOException{
+		
 		String fileName = args[1];
 		FileReader f = new FileReader(fileName);
 		BufferedReader br = new BufferedReader(f);
@@ -16,23 +18,26 @@ public class waterFlow{
 		}
 		list.add("");
 		return list;
+		
 	}
+	
 	public static void writeOutput(String outBFS,String outDFS, String outUCS) throws IOException{
-		String oBFS = outBFS;
-		String oDFS = outDFS;
-		String oUCS = outUCS;
+		
 		File file= new File("output.txt");
 		if(!file.exists())
 			file.createNewFile();
-		//file.getParentFile().mkdirs();
+			
 		PrintWriter writer = new PrintWriter(file,"UTF-8");
-		if(!oBFS.equals(""))
-			writer.println(oBFS);
-		if(!oDFS.equals(""))
-			writer.println(oDFS);
-		if(!oUCS.equals(""))
-			writer.println(oUCS);
+		
+		if(!outBFS.equals(""))
+			writer.println(outBFS);
+		if(!outDFS.equals(""))
+			writer.println(outDFS);
+		if(!outUCS.equals(""))
+			writer.println(outUCS);
+			
 		writer.close();
+		
 	}
 	
 	public static void main(String args[]) throws IOException{
@@ -40,7 +45,7 @@ public class waterFlow{
 		String[] inputStringArray = inputList.toArray(new String[0]);
 		int numberOfTestCases = Integer.parseInt(inputStringArray[0]);
 		int numberOfLines = inputStringArray.length;
-		if(enableDebug)System.out.println(numberOfLines+" No of lines");
+
 		String outputBFS="";
 		String outputDFS="";
 		String outputUCS="";
@@ -49,73 +54,64 @@ public class waterFlow{
 		int count=0;
 		while(count<=numberOfTestCases-1){
 			ArrayList<String> testCase = new ArrayList<String>();
-		for(int i=k;i<numberOfLines;i++){
-			if(!inputStringArray[i].equals("")){
-				testCase.add(inputStringArray[i]);
-			}
-			else{
-				if(testCase.size()==3){
-					testCase.add("");
-					k=i+1;
-				}
-				else{	
-				//if(enableDebug)System.out.println(nextIndex);
-				if(testCase.get(0).equals("BFS")){
-					outputBFS = waterFlow.BFS(testCase);
-					System.out.println("From main"+":"+outputBFS);
-					writeOutput(outputBFS,outputDFS,outputUCS);
-				}
-				else if(testCase.get(0).equals("DFS")){
-					outputDFS = waterFlow.DFS(testCase);
-					System.out.println("From main"+":"+outputDFS);
-					writeOutput(outputBFS,outputDFS,outputUCS);
+			for(int i=k;i<numberOfLines;i++){
+				if(!inputStringArray[i].equals("")){
+					testCase.add(inputStringArray[i]);
 				}
 				else{
-					outputUCS = waterFlow.UCS(testCase);
-					System.out.println("From main"+":"+outputUCS);
-					writeOutput(outputBFS,outputDFS,outputUCS);
-				}
-				nextIndex=i+1;
-				count=count+1;
-				k=nextIndex;
-				break;
-				}
-			}		
-		}
+					if(testCase.size()==3){
+						testCase.add("");
+						k=i+1;
+					}
+					else{	
+					//if(enableDebug)System.out.println(nextIndex);
+					if(testCase.get(0).equals("BFS")){
+						outputBFS = waterFlow.BFS(testCase);
+						System.out.println("From main"+":"+outputBFS);
+						writeOutput(outputBFS,outputDFS,outputUCS);
+					}
+					else if(testCase.get(0).equals("DFS")){
+						outputDFS = waterFlow.DFS(testCase);
+						System.out.println("From main"+":"+outputDFS);
+						writeOutput(outputBFS,outputDFS,outputUCS);
+					}
+					else{
+						outputUCS = waterFlow.UCS(testCase);
+						System.out.println("From main"+":"+outputUCS);
+						writeOutput(outputBFS,outputDFS,outputUCS);
+					}
+					nextIndex=i+1;
+					count=count+1;
+					k=nextIndex;
+					break;
+					}
+				}		
+			}
 		}				
 	}
 	public static String BFS(ArrayList<String> testCase){
-		if(enableDebug)System.out.println("Hello From BFS");
-		//if(enableDebug)System.out.println("Size of test case list"+testCase.size());
+		if(enableDebug)System.out.println("****BFS****");
 		for(String str: testCase)
 			if(enableDebug)System.out.println(str);
 		//Get the nodes
 		String sourceNode = testCase.get(1);
-		if(enableDebug)System.out.println(sourceNode);
+		if(enableDebug)System.out.println("Source:"+sourceNode);
 		String[] goalNodes = testCase.get(2).split("\\s+");
+		if(enableDebug)System.out.println("Destination(s): ");
 		for(String str: goalNodes)
-			if(enableDebug)System.out.print(str);
+			if(enableDebug)System.out.print(str+" ");
 		String[] middleNodes = testCase.get(3).split("\\s+");
+		if(enableDebug)System.out.println("Intermediate(s): ");
 		for(String str: middleNodes)
-			if(enableDebug)System.out.print(str);
-		//String[] x ="".split("\\s+");
-		//for(String str: x)
-		//	if(enableDebug)System.out.print(str);
+			if(enableDebug)System.out.print(str+" ");
+		
 		ArrayList<String> allNodes = new ArrayList<String>();
 		allNodes.add(sourceNode);
 		for(String nodes: goalNodes)
 			allNodes.add(nodes);
 		for(String nodes: middleNodes)
 			allNodes.add(nodes);
-		for(String str: allNodes)
-		if(enableDebug)System.out.println("allnodes"+str);
-		/*HashMap<String, HashMap<String, Integer>> map = new HashMap<String, HashMap<String, Integer>>();
-		for(String firstNode:allNodes){
-			map.put(firstNode, new HashMap<String,Integer>());
-			for(String secondNode:allNodes){
-				map.get(firstNode).put(secondNode,0);
-			}
-		}*/
+
 		HashMap<String, HashMap<String, Integer>> adjMap = initializeAdjacencyMap(allNodes);
 		int numberOfPipes = Integer.parseInt(testCase.get(4));
 		if(enableDebug)System.out.println(numberOfPipes);
@@ -133,12 +129,10 @@ public class waterFlow{
 		for(String node: allNodes){
 			exploredSet.put(node,false);
 		}
-		if(enableDebug)System.out.println("Goal Nodes are");
-		for(String str: goalNodes)
-			if(enableDebug)System.out.print(str+" ");
-		//if(enableDebug)System.out.println("A".equals("A"));
-		//boolean x = isGoal(goalNodes,"A");
-		//if(enableDebug)System.out.println("Is x the goal? "+x);
+//		if(enableDebug)System.out.println("Goal Nodes are");
+//		for(String str: goalNodes)
+//			if(enableDebug)System.out.print(str+" ");
+
 		
 		//Frontier Queue Initialization
 		ArrayList<String> childNodes = new ArrayList<String>();
@@ -158,6 +152,7 @@ public class waterFlow{
 			}
 			else{
 				childNodes.clear();
+				/* Get the node at the front of queue and store its childnodes in a list */
 				String frontNode=(String)frontier.poll();
 				if(enableDebug)System.out.println("after removing front node"+frontier.size());
 				exploredSet.replace(frontNode,true);
@@ -170,7 +165,7 @@ public class waterFlow{
 				for(String child: childNodes){
 					if(!(exploredSet.get(child)) && !(frontier.contains(child))){
 						if(isGoal(goalNodes,child)){
-							if(enableDebug)System.out.println("goal reached at:"+child);
+							if(enableDebug)System.out.println("Goal reached at:"+child);
 							flag=false;
 							parent.put(child,frontNode);
 							if(enableDebug)System.out.println("Print path:");
@@ -201,27 +196,30 @@ public class waterFlow{
 	}
 
 	public static String DFS(ArrayList<String> testCase){
-		if(enableDebug)System.out.println("Hello From DFS");
+		if(enableDebug)System.out.println("****DFS****");
 		String output="";
 		for(String str: testCase)
 			if(enableDebug)System.out.println(str);
 		//Get the nodes
+	
 		String sourceNode = testCase.get(1);
-		if(enableDebug)System.out.println(sourceNode);
+		if(enableDebug)System.out.println("Source:"+sourceNode);
 		String[] goalNodes = testCase.get(2).split("\\s+");
+		if(enableDebug)System.out.println("Destination(s): ");
 		for(String str: goalNodes)
-			if(enableDebug)System.out.print(str);
+			if(enableDebug)System.out.print(str+" ");
 		String[] middleNodes = testCase.get(3).split("\\s+");
+		if(enableDebug)System.out.println("Intermediate(s): ");
 		for(String str: middleNodes)
-			if(enableDebug)System.out.print(str);
+			if(enableDebug)System.out.print(str+" ");
+		
 		ArrayList<String> allNodes = new ArrayList<String>();
 		allNodes.add(sourceNode);
 		for(String nodes: goalNodes)
 			allNodes.add(nodes);
 		for(String nodes: middleNodes)
 			allNodes.add(nodes);
-		for(String str: allNodes)
-		if(enableDebug)System.out.println("allnodes"+str);
+		
 		HashMap<String, HashMap<String, Integer>> adjMap = initializeAdjacencyMap(allNodes);
 		int numberOfPipes = Integer.parseInt(testCase.get(4));
 		if(enableDebug)System.out.println(numberOfPipes);
@@ -290,20 +288,13 @@ public class waterFlow{
 							path.clear();
 							output=child+" "+finalTime;
 							break;
-						}
-					
-					
+						}				
 						frontier.push(child);
 						parent.put(child,frontNode);
 						flag=true;
-					}
-			
-					
-					
-				}
-					
-			}
-			
+					}			
+				}				
+			}		
 		}
 		return output;
 		
@@ -312,6 +303,8 @@ public class waterFlow{
 	static HashMap<String, Integer> pathCost = new HashMap<String, Integer>();
 	static ArrayList<String> offTimeArray = new ArrayList<String>();
 	static HashMap<String, HashMap<String, ArrayList<String>>> offTimes = new HashMap<String, HashMap<String, ArrayList<String>>>();
+	
+	/* Comaparator based on path cost */
 	static class PathLengthComparator implements Comparator<String>{
 		public int compare(String a,String b){
 			if(pathCost.get(a)<pathCost.get(b))
@@ -348,8 +341,7 @@ public class waterFlow{
 		HashMap<String, HashMap<String, Integer>> adjMap = initializeAdjacencyMap(allNodes);
 		int numberOfPipes = Integer.parseInt(testCase.get(4));
 		if(enableDebug)System.out.println(numberOfPipes);
-		//HashMap<String, HashMap<String, ArrayList<String>>> offTimes = new HashMap<String, HashMap<String, ArrayList<String>>>();
-		//ArrayList<String> offTimeArray = new ArrayList<String>();
+		
 		
 		for(String m:allNodes){
 			offTimes.put(m,new HashMap<String,ArrayList<String>>());
@@ -358,7 +350,7 @@ public class waterFlow{
 				
 			}
 		}
-		//if(enableDebug)System.out.println(offTimes.get("AA").get("BA"));
+
 		for(int i=1;i<numberOfPipes+1;i++){
 			//offTimeArray.clear();
 			ArrayList<String> offTimeArray = new ArrayList<String>();
@@ -370,7 +362,6 @@ public class waterFlow{
 			//Storing off times
 			
 			int numberOfOffTimes = Integer.parseInt(pipe[3]);
-			//if(enableDebug)System.out.println(numberOfOffTimes);
 			if(numberOfOffTimes!=0){
 				for(int j=0;j<numberOfOffTimes;j++){
 					String temp = pipe[4+j]; 
@@ -378,10 +369,6 @@ public class waterFlow{
 				}
 			}
 			if(enableDebug)System.out.println("Start:"+startPointOfPipe+" End:"+endPointOfPipe+" OfftimeArray: ");
-			//for(String str: offTimeArray){
-			//	if(enableDebug)System.out.print(str+ "");
-			//}
-			//offTimes.put(startPointOfPipe, new HashMap<String,ArrayList<String>>());
 			offTimes.get(startPointOfPipe).put(endPointOfPipe,offTimeArray);
 			for(String str:offTimes.get(startPointOfPipe).get(endPointOfPipe))
 				if(enableDebug)System.out.print(str+ " ");
@@ -389,8 +376,7 @@ public class waterFlow{
 		
 		
 		int startTime = Integer.parseInt(testCase.get(4+numberOfPipes+1));
-		//if(enableDebug)System.out.println(startTime);
-		//HashMap<String, Integer> pathCost = new HashMap<String, Integer>();
+
 		for(String str: allNodes){
 			pathCost.put(str,0);
 		}
@@ -427,9 +413,6 @@ public class waterFlow{
 			else{
 				childNodes.clear();
 				ArrayList<String> offTime = new ArrayList<String>();
-				//String peekFront=(String)frontier.peek();
-				//String peekParent = parent.get(peekFront);
-				//ArrayList<String> offTime = offTimes.get(peekParent).get(peekFront);
 					if(enableDebug)System.out.println("Frontier after before frontNode:"+frontier);
 					String frontNode=(String)frontier.poll();
 					if(enableDebug)System.out.println("Frontier after popping frontNode:"+frontier);
@@ -451,10 +434,7 @@ public class waterFlow{
 						//Return path,pathcost and goalnode
 						output=frontNode+" "+currentTime;
 					}
-					else{
-						
-						//if(isValidTime(currentTime,offTime) || frontNode.equals(sourceNode)){
-							
+					else{	
 							if(enableDebug)System.out.println("Current time before traversing a valid path:"+currentTime);
 							exploredSet.replace(frontNode,true);
 							if(!frontNode.equals(sourceNode)){
@@ -466,14 +446,9 @@ public class waterFlow{
 								if(adjMap.get(frontNode).get(y)!=0)
 									childNodes.add(y);
 							}
-							//for(String cn:childNodes){
-								//if(enableDebug)System.out.print("children of:"+frontNode);
-								//if(enableDebug)System.out.println(cn);
-							//}
 							for(String child:childNodes){
 								if(!(exploredSet.get(child)) && !(frontier.contains(child))){
 									//add it only if pipe from parent to child active starting from the next moment
-									//if(enableDebug)System.out.println(offTimes.get(frontNode).get(child));
 									for(String z:offTimes.get(frontNode).get(child))
 										if(enableDebug)System.out.print(z+ "xxx ");
 									if(enableDebug)System.out.println(offTimes.get(frontNode).get(child));
@@ -508,23 +483,11 @@ public class waterFlow{
 									flag=true;
 								}
 								else{}
-							}
-						//}
-						
-						
-					}//else ending
-			
-			
-				
-				
-				
-					
-			}
-			
-		}
-		
-		return output;
-		
+							}					
+					}			
+			}	
+		}		
+		return output;	
 	}
 	
 	public static HashMap<String, HashMap<String, Integer>> initializeAdjacencyMap(ArrayList<String> allNodes){
@@ -550,6 +513,7 @@ public class waterFlow{
 			return map;
 		}	
 	
+	/* Goal Test */
 	public static boolean isGoal(String[] goalNode, String node){
 		boolean goal=false;
 		for(String str: goalNode){
