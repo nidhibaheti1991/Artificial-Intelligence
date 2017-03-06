@@ -1,9 +1,9 @@
-//Added some changes to accomodate the example illustriated on discussion
 import java.io.*;
 import java.util.*;
 public class mancala{
 	static boolean enableDebug=false;
 	
+	/* Print utility method */
 	public static void print(String outString){
 		if(enableDebug){
 			System.out.print(outString);
@@ -11,6 +11,7 @@ public class mancala{
 		}
 	}
 	
+	/* Method to getInput from input file and store in an ArrayList data structure. */
 	public static ArrayList<String> getInput(String[] args) throws IOException{
 		String fileName = args[1];
 		FileReader f = new FileReader(fileName);
@@ -18,7 +19,6 @@ public class mancala{
 		String line;
 		ArrayList<String> list = new ArrayList<String>();
 		while((line=br.readLine())!=null){
-			/*if(enableDebug)if(enableDebug)System.out.println(line);*/
 			list.add(line);
 		}
 		return list;
